@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://cr2wgd06s30mq"]
+
+[ext_resource type="Script" uid="uid://whmcoh5mau5j" path="res://scripts/enemy_slime.gd" id="1_g7111"]
+[ext_resource type="PackedScene" uid="uid://ogik4s70pgwl" path="res://assets/characters/slime/slime.tscn" id="2_xkope"]
+[ext_resource type="PackedScene" uid="uid://by00wgrwmu31c" path="res://scenes/shared/hitbox_component.tscn" id="3_0fjgw"]
+[ext_resource type="PackedScene" uid="uid://b3smcvoo7p7hy" path="res://scenes/shared/health_component.tscn" id="4_tbbhe"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vpo2v"]
+radius = 51.0098
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_547jt"]
+radius = 33.6155
+
+[node name="enemy_slime" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 6
+motion_mode = 1
+script = ExtResource("1_g7111")
+
+[node name="HealthComponent" parent="." instance=ExtResource("4_tbbhe")]
+MAX_HEALTH = 20
+
+[node name="Slime" parent="." instance=ExtResource("2_xkope")]
+unique_name_in_owner = true
+position = Vector2(0, 24)
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("3_0fjgw")]
+collision_layer = 4
+collision_mask = 3
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+position = Vector2(0, -6)
+shape = SubResource("CircleShape2D_vpo2v")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(-1, -4)
+shape = SubResource("CircleShape2D_547jt")
+
+[node name="DamageNumbersOrigin" type="Node2D" parent="."]
+position = Vector2(30, -62)
+
+[connection signal="area_entered" from="HitboxComponent" to="." method="_on_hitbox_component_area_entered"]

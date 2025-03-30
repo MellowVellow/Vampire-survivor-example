@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://qlyr2ufjggqo"]
+
+[ext_resource type="Script" uid="uid://b0uiaa8oq7xvu" path="res://scripts/Gun.gd" id="1_c1o1w"]
+[ext_resource type="Resource" uid="uid://p4cp7wp0qac7" path="res://weapons/TestgunStats.tres" id="2_fqnb5"]
+[ext_resource type="Script" uid="uid://denrhp2mnu46" path="res://weapons/weaponstats.gd" id="2_qre0h"]
+[ext_resource type="Texture2D" uid="uid://cswb5do8rrj7q" path="res://assets/pistol/pistol.png" id="2_txyvf"]
+
+[node name="Gun" type="Area2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_c1o1w")
+_weapons_resources = Array[ExtResource("2_qre0h")]([ExtResource("2_fqnb5")])
+
+[node name="WeaponPivot" type="Marker2D" parent="."]
+
+[node name="Pistol" type="Sprite2D" parent="WeaponPivot"]
+position = Vector2(66, 0)
+texture = ExtResource("2_txyvf")
+
+[node name="ShootingPoint" type="Marker2D" parent="WeaponPivot/Pistol"]
+unique_name_in_owner = true
+position = Vector2(26, -14)

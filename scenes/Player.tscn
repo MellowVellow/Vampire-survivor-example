@@ -1,0 +1,66 @@
+[gd_scene load_steps=10 format=3 uid="uid://1fa6j6cwhj72"]
+
+[ext_resource type="PackedScene" uid="uid://cub2n5xr7dosj" path="res://assets/characters/happy_boo/happy_boo.tscn" id="1_1jj8l"]
+[ext_resource type="Script" uid="uid://dydcsy3g11skd" path="res://scripts/Player.gd" id="1_r2y0n"]
+[ext_resource type="PackedScene" uid="uid://b3smcvoo7p7hy" path="res://scenes/shared/health_component.tscn" id="4_418f7"]
+[ext_resource type="PackedScene" uid="uid://qlyr2ufjggqo" path="res://scenes/Gun.tscn" id="4_g6ihq"]
+[ext_resource type="PackedScene" uid="uid://by00wgrwmu31c" path="res://scenes/shared/hitbox_component.tscn" id="5_p7n2m"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qo2ad"]
+radius = 22.0227
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_08nl8"]
+bg_color = Color(0.152941, 0.168627, 0.188235, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j7mjo"]
+bg_color = Color(0.623529, 0.866667, 0.317647, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_15q7m"]
+radius = 34.0
+height = 102.0
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 3
+collision_mask = 60
+motion_mode = 1
+script = ExtResource("1_r2y0n")
+
+[node name="HappyBoo" parent="." instance=ExtResource("1_1jj8l")]
+position = Vector2(0, 48)
+
+[node name="Gun" parent="." instance=ExtResource("4_g6ihq")]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, 32)
+shape = SubResource("CircleShape2D_qo2ad")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+unique_name_in_owner = true
+z_index = 1
+offset_left = -142.0
+offset_top = -138.0
+offset_right = 141.0
+offset_bottom = -120.0
+theme_override_styles/background = SubResource("StyleBoxFlat_08nl8")
+theme_override_styles/fill = SubResource("StyleBoxFlat_j7mjo")
+value = 100.0
+show_percentage = false
+
+[node name="HealthComponent" parent="." instance=ExtResource("4_418f7")]
+MAX_HEALTH = 1000
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("5_p7n2m")]
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+position = Vector2(0, 9)
+shape = SubResource("CapsuleShape2D_15q7m")

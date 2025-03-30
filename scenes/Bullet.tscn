@@ -1,0 +1,163 @@
+[gd_scene load_steps=10 format=3 uid="uid://demm5e7rguesx"]
+
+[ext_resource type="Script" uid="uid://r5rscdkferjb" path="res://scripts/shared/Bullet.gd" id="1_dhldk"]
+[ext_resource type="Texture2D" uid="uid://dftkbqwsfd68r" path="res://assets/pistol/projectile.png" id="2_4jeyw"]
+[ext_resource type="PackedScene" uid="uid://by00wgrwmu31c" path="res://scenes/shared/hitbox_component.tscn" id="2_qlksa"]
+[ext_resource type="AudioStream" uid="uid://dc0aphjymggq2" path="res://assets/Bulletimpact.wav" id="4_ci1uw"]
+[ext_resource type="PackedScene" uid="uid://bupno6py4fxlh" path="res://scenes/impact.tscn" id="5_l5vh2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f6wh2"]
+radius = 12.0
+height = 36.0
+
+[sub_resource type="Animation" id="Animation_ut08u"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath("Impact:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath("AudioStreamPlayer2D:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = false
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [false],
+"method": &"set_physics_process"
+}, {
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_8eunq"]
+resource_name = "TakeDamage"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [false],
+"method": &"set_physics_process"
+}, {
+"args": [],
+"method": &"queue_free"
+}]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitboxComponent/Hitbox")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Impact:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AudioStreamPlayer2D:playing")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ukuw3"]
+_data = {
+&"RESET": SubResource("Animation_ut08u"),
+&"TakeDamage": SubResource("Animation_8eunq")
+}
+
+[node name="Bullet" type="Node2D"]
+top_level = true
+script = ExtResource("1_dhldk")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_4jeyw")
+
+[node name="HitboxComponent" parent="." instance=ExtResource("2_qlksa")]
+position = Vector2(0, 1)
+collision_layer = 2
+collision_mask = 4
+
+[node name="Hitbox" type="CollisionShape2D" parent="HitboxComponent"]
+position = Vector2(6, 0)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_f6wh2")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ukuw3")
+}
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_ci1uw")
+
+[node name="Impact" parent="." instance=ExtResource("5_l5vh2")]
+amount = 8
+
+[connection signal="area_entered" from="HitboxComponent" to="." method="_on_hitbox_component_area_entered"]

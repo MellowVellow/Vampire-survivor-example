@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="WeaponStats" load_steps=2 format=3 uid="uid://p4cp7wp0qac7"]
+
+[ext_resource type="Script" uid="uid://denrhp2mnu46" path="res://weapons/weaponstats.gd" id="1_2d6fr"]
+
+[resource]
+script = ExtResource("1_2d6fr")
+fire_rate = 0.01
+damage = 0
+element = 0
